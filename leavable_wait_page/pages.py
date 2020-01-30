@@ -37,19 +37,17 @@ class LeavableWaitPage(WaitPage):
     # Only for the first, grouping wait page of the app
     template_name = 'leavable_wait_page/LeavableWaitPage.html'
 
-    # In case a player waits more than startwp_timer (expressed in seconds), he will be offered the option to skip
+    # In case a player waits more than allow_leaving_after (expressed in seconds), he will be offered the option to skip
     # pages. By default, if skip_until_the_end_of = "experiment", if he decides to skip pages, he will skip all the
-    # pages until the end of the experiment (provided those pages inherit from CustomMturkPage or CustomMturkWaitPage).
+    # pages until the end of the experiment (provided those pages inherit from SkippablePage or LeavableWaitPage).
     # If skip_until_the_end_of = "app", he will only skip the pages of the current app.
     # If skip_until_the_end_of = "round", only pages of the current round will be skipped
-    allow_leaving_after = 7200
+    allow_leaving_after = 3600
     # "experiment" or "app or "round"
     skip_until_the_end_of = "experiment"
-
     group_by_arrival_time = True
 
     def dispatch(self, *args, **kwargs):
-
         curparticipant = Participant.objects.get(code__exact=kwargs['participant_code'])
 
         if self.request.method == 'POST':
@@ -75,7 +73,7 @@ class LeavableWaitPage(WaitPage):
             else:
                 assert self.skip_until_the_end_of == "experiment", \
                     "the attribute skip_until_the_end_of should be set to experiment, app or round, not {}".format(
-                    self.skip_until_the_end_of)
+                        self.skip_until_the_end_of)
                 curparticipant.vars['go_to_the_end'] = True
 
             curparticipant.save()
@@ -88,7 +86,7 @@ class LeavableWaitPage(WaitPage):
         now = time.time()
 
         wptimerecord, created = self.participant.augmentedparticipant.wptimerecord_set.get_or_create(app=app_name,
-                                                                                      page_index=index_in_pages)
+                                                                                                     page_index=index_in_pages)
         if not wptimerecord.startwp_timer_set:
             wptimerecord.startwp_timer_set = True
             wptimerecord.startwp_time = time.time()
@@ -175,7 +173,7 @@ class LeavableWaitPage(WaitPage):
             players = self.group.get_players()
         # It is theoretically possible to have a participant with "go_to_the_end" and also inside a "normal" group with
         # more than one player... This can happen because "go_to_the_end" is set outside of the group-by-arrival-time
-        # lock (and the lock veries depending on the version of oTree so we can not easily fix this), but should be
+        # lock (and the lock varies depending on the version of oTree so we can not easily fix this), but should be
         # very rare, just when a participant requests exits right at the moment when he is grouped and if we have no
         # luck...
         # To fix this, we use a dirty hack here... we detect this anomaly with this test
