@@ -1,7 +1,7 @@
 # Leavable Wait Page for oTree
 
 ## Overview
-The oTree extension app leavable_wait_page implements a LeavableWaitPage, that gives participants the opportunity to leave the wait page and continue the experiment after a predefined timeout. For example. this allows participants to continue (or end) the experiment, if no other player is available for group matching.
+The oTree extension app leavable_wait_page implements a LeavableWaitPage, that gives participants the opportunity to leave the wait page and continue the experiment after a predefined timeout. For example, this allows participants to continue (or quit) the experiment, if no other player is available for group matching.
 
 A timer on the wait page indicates how much longer the participant must wait before being able to leave the study. Once the time runs out, participants can click “leave the study” (or continue waiting) and are subsequently taken to the end of the round, the app, or the study, depending on a simple setting.
 
@@ -9,6 +9,8 @@ The code has been tested with oTree v2.5.5 and should work with any oTree versio
 
 _Note: Although this project is heavily based on the fantastic [custom-waiting-page-for-mturk](https://github.com/chapkovski/custom-waiting-page-for-mturk), it is not a drop-in replacement!_
 
+## Demo
+A [simple demo](https://leavable-wait-page.herokuapp.com) is included with the project.
 
 ## Installation
 1. Download or clone the project and copy the ``leavable_wait_page`` folder into your oTree project folder, next to your app folders. 
@@ -31,24 +33,23 @@ class TaskPage(SkippablePage):
 ```
 Also inherit your other "non-wait pages" from SkippablePage instead of Page. This is necessary to allow a participant to reach the end of the module or the end of the experiment if he has waited too much.
 
-Other standard wait pages, not located at the first position of the app, should be declared as a WaitPage, as usual.
-
 The LeavableWaitPage is an extension of a standard oTree WaitPage with the setting ``group_by_arrival_time = True``. Consequently, it must necessarily be the first page of the page_sequence of an app.
 
+Other standard wait pages, not located at the first position of the app, should be declared as a WaitPage, as usual.
 
 ## Settings
 The LeavableWaitPage has, in addition to standard properties of an oTree WaitPage (such as ``wait_for_all_groups`` or ``group_by_arrival_time``), two additional properties:
 
-1. ``allow_leaving_after``: After how long will the participant be offered to quit the study (in seconds). Default value: ``3600``.
+1. ``allow_leaving_after``: After how long will the participant be offered to quit the study (in seconds). Defaults to 3600.
 
-2. ``skip_until_the_end_of``: whether participants who ask to stop waiting, should skip the whole experiment or only the current app, or only the current round. Default value: ``experiment`` . Other possible values: ``app`` and ``round``.
+2. ``skip_until_the_end_of``: whether participants who ask to stop waiting should skip the whole experiment or only the current app, or only the current round. Defaults to ``experiment``. Other possible values are ``app`` and ``round``.
 
 
 ### Technical remarks
-Leavers will go through all "is_displayed" methods but will not enter "before_next_page" of the pages that are skipped, which is the standard oTree behavior on pages that return is_displayed = False. Leavers will go through standard wait pages, as a player in a one-player group.
+Leavers will go through all "is_displayed" methods but will not enter "before_next_page" of the pages that are skipped, which is the standard oTree behavior on pages that return is_displayed = False. Leavers will go through standard wait pages as a player in a one-player group.
 
 If leavers have to go through many standard wait pages in a row,
-in some cases this can create a ``redirectCycleError()``. To avoid this problem, just add an is_displayed() method in your standard wait pages and ``return False`` if the participant is detected to be a leaver.
+in some cases this can create a ``redirectCycleError()``. To avoid this problem, just add an is_displayed() method to your standard wait pages and ``return False`` if the participant is detected to be a leaver.
 
 You can detect a leaver like this:
 ```python
