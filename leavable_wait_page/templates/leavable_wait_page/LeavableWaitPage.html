@@ -1,0 +1,111 @@
+{% extends 'otree/WaitPage.html' %}
+{% load staticfiles otree %}
+
+{% block title %}
+    Please wait
+{% endblock %}
+
+{% block styles %}
+    <style>
+        #left_to_wait {
+            font-weight: bold;
+        }
+        #otree-timer__time-left {
+            font-weight: bold;
+        }
+        #leave_study {
+            margin-bottom: 1em;
+            display: none;
+        }
+    </style>
+{% endblock %}
+
+{% block content %}
+    <p>
+        Waiting for <span id="left_to_wait"></span> more <span id="left_to_wait_people"></span>.<br />
+        <b><span id="how_many_arrived"></span>/{{ Constants.players_per_group }}</b> required participants are
+        waiting.<br/>
+    </p>
+        
+    <div id="otree-timeout-warning">
+        <p>
+            You can finish the study if nobody arrives in: <span id="otree-timer__time-left"></span>
+        </p>
+    </div>
+    
+    <div id="leave_study">
+        <form action="" method="post" role="form" class="form">
+            {% csrf_token %}
+            <input type="hidden" name="endofgame" value="{{ player.pk }}">
+            <p>
+                You may continue waiting or <a href="#" onclick="this.closest('form').submit(); return false;">leave the study</a>.
+            </p>
+        </form>
+    </div>
+{% endblock %}
+
+{% block scripts %}
+    <script type="text/javascript" src="{% static 'leavable_wait_page/jquery.countdown.min.js' %}"></script>
+    <script type="text/javascript">
+        /* Websockets */
+        var ws_scheme = window.location.protocol === "https:" ? "wss" : "ws";
+        var ws = new WebSocket(ws_scheme + '://' + window.location.host + "/waiting_page/{{participant.code}}/{{ app_name }}/{{ group.pk }}/{{ player.pk }}/{{index_in_pages}}");
+    
+        // Handle any errors that occur.
+        ws.onerror = function (error) {
+            console.log('WebSocket Error: ' + error);
+        };
+    
+        // Show a connected message when the WebSocket is opened.
+        ws.onopen = function (event) {
+            console.log('connected to oTree');
+        };
+    
+        // Handle messages sent by the server.
+        ws.onmessage = function (event) {
+            var payload = JSON.parse(event.data);
+            if (payload.hasOwnProperty('num_missing_participants')) {
+                $('#how_many_arrived').html(payload.num_waiting_participants);
+                $('#left_to_wait').html(payload.num_missing_participants);
+                
+                var people = payload.num_missing_participants !== 1 ? 'participants' : 'participant';
+                $('#left_to_wait_people').html(people);
+                
+                people = payload.num_waiting_participants !== 1 ? 's are' : ' is';
+                $('#how_many_arrived_people').html(people);
+            }
+        };
+    
+        // Show a disconnected message when the WebSocket is closed.
+        ws.onclose = function (event) {
+            console.log('disconnected from oTree');
+        };
+
+        /* leave study countdown */
+        var currentDate = new Date();
+        var milliseconds = Math.floor({{ time_left | json}} * 1000);
+        $('span#otree-timer__time-left')
+            .countdown(currentDate.valueOf() + milliseconds)
+            .on('update.countdown', function (event) {
+                // %-N is "Total count of minutes till the end, non-padded"
+                // %S is seconds left
+                var format = '%-N:%S';
+                var remainingTime = event.strftime(format);
+                $(this).html(remainingTime);
+    
+                if (event.strftime('%-M') > 30) {
+                    // Do not show if max waiting time is above 30 minutes
+                    $('div#otree-timeout-warning').filter(":visible").hide(duration = 0);
+                } 
+    
+            })
+            .on('finish.countdown', function (event) {
+                $('div#otree-timeout-warning').hide(duration = 0);
+                $('#leave_study').show();
+            });
+    </script>
+{% endblock %}
+
+
+
+

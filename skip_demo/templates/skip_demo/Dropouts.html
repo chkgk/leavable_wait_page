@@ -1,0 +1,14 @@
+{% extends "global/Page.html" %}
+{% load otree static %}
+
+{% block title %}
+    Dropouts
+{% endblock %}
+
+{% block content %}
+    <p>
+        This page is only shown to those who left the waiting page because they did not want to wait any longer.
+    </p>
+    {% next_button %}
+
+{% endblock %}

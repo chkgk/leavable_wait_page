@@ -1,0 +1,15 @@
+{% extends "global/Page.html" %}
+{% load otree static %}
+
+{% block title %}
+    Results
+{% endblock %}
+
+{% block content %}
+    <p>
+        This page is skipped if the participants left the wait page, because they did not want to wait any longer.
+    </p>
+    {% next_button %}
+{% endblock %}
+
+
