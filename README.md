@@ -1,7 +1,7 @@
 # Leavable Wait Page for oTree
 
 ## Overview
-The oTree extension app leavable_wait_page implements a LeavableWaitPage, that gives participants the opportunity to leave the wait page and continue the experiment after a predefined timeout. For example, this allows participants to continue (or quit) the experiment, if no other player is available for group matching.
+This app implements a leavable<sup>1</sup> wait page for oTree, i.e. a wait page that gives participants the opportunity to stop waiting for other players and continue with the experiment. For example, this allows participants to continue (or quit) the experiment, if no other player is available for group matching.
 
 A timer on the wait page indicates how much longer the participant must wait before being able to leave the study. Once the time runs out, participants can click “leave the study” (or continue waiting) and are subsequently taken to the end of the round, the app, or the study, depending on a simple setting.
 
@@ -68,3 +68,6 @@ def is_displayed(self):
 
 ## Acknowledgements
 This app uses code and descriptions from the fantastic [custom-waiting-page-for-mturk](https://github.com/chapkovski/custom-waiting-page-for-mturk) by Essi Kujansuu, Nicolas Gruyer, and Philipp Chapkovski. The original licence is included.
+
+____________________________________________________
+<sup>1</sup> https://en.wiktionary.org/wiki/leavable
