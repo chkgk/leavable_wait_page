@@ -5,7 +5,7 @@ This app implements a leavable<sup>1</sup> wait page for oTree, i.e. a wait page
 
 A timer on the wait page indicates how much longer the participant must wait before being able to leave the study. Once the time runs out, participants can click “leave the study” (or continue waiting) and are subsequently taken to the end of the round, the app, or the study, depending on a simple setting.
 
-The code has been tested with oTree v2.5.5 and should work with any oTree version >= 2.3.x. It is not compatible with oTree below version 2.3, as the newer versions use a different version of channels (2.x).
+**The code has been tested with oTree v2.5.8. It is not currently compatible with oTree below version 2.3 and oTree above version 2.5.x (especially oTree 3.x.x).** The older versions use a different version of channels, the newer have deprecated "get_players_for_group" on the waitpage and moved it to the subsession. I do not currently have a fix for this problem.
 
 _Note: Although this project is heavily based on the fantastic [custom-waiting-page-for-mturk](https://github.com/chapkovski/custom-waiting-page-for-mturk), it is not a drop-in replacement!_
 
