@@ -67,7 +67,7 @@ def is_displayed(self):
 ```
 
 ## Acknowledgements
-This app uses code and descriptions from the fantastic [custom-waiting-page-for-mturk](https://github.com/chapkovski/custom-waiting-page-for-mturk) by Essi Kujansuu, Nicolas Gruyer, and Philipp Chapkovski. The original licence is included.
+This app uses code and descriptions from the fantastic [custom-waiting-page-for-mturk](https://github.com/chapkovski/custom-waiting-page-for-mturk) by Essi Kujansuu, Nicolas Gruyer, and Philipp Chapkovski. The original license is included.
 
 ____________________________________________________
 <sup>1</sup> https://en.wiktionary.org/wiki/leavable
