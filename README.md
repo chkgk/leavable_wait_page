@@ -9,9 +9,6 @@ A timer on the wait page indicates how much longer the participant must wait bef
 
 _Note: Although this project is heavily based on the fantastic [custom-waiting-page-for-mturk](https://github.com/chapkovski/custom-waiting-page-for-mturk), it is not a drop-in replacement!_
 
-## Demo
-A [simple demo](https://leavable-wait-page.herokuapp.com) is included with the project.
-
 ## Installation
 1. Download or clone the project and copy the ``leavable_wait_page`` folder into your oTree project folder, next to your app folders. 
 
